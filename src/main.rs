@@ -30,30 +30,27 @@ mod options;
 
 use std::io::{stdin, stdout, Write};
 use std::process::exit;
-use image::DynamicImage;
+use image::{DynamicImage, ImageFormat};
 use utils::terminal::{display_menu, clear_screen};
 use utils::save_image::save_img;
+use utils::extract_path::extract_path;
+use crate::utils::file_name::file_name;
+use crate::utils::format_image::format_image;
+use crate::utils::get_image::get_image;
 
 fn main() {
-    // 1. First, you need to implement some basic command-line argument handling
+    // 1. First, you need to implement some basic command-line argument handling,
     // so you can make your program do different things.  Here's a little bit
     // to get you started doing manual parsing.
     //
     // Challenge: If you're feeling really ambitious, you could delete this code
     // and use the "clap" library instead: https://docs.rs/clap/2.32.0/clap/
     loop {
-        let mut infile: String = String::new();
-
-        clear_screen();
-
-        print!("Mova a foto que deseja adicionar o efeito: ");
-        stdout().flush().unwrap();
-
-        stdin().read_line(&mut infile).unwrap();
+        let mut infile: String = get_image();
 
         let items: [&str; 8] = [
             "Blur",
-            "Brigten",
+            "Brighten",
             "Crop",
             "Rotate",
             "Invert",
@@ -62,10 +59,10 @@ fn main() {
             "Fractal"
         ];
 
-        let option_menu_selected: u32 = display_menu("Home", &items, true);
+        let option_menu_selected: u8 = display_menu("Home", &items, true);
 
         clear_screen();
-        let (mut success, mut return_img) = (false, DynamicImage::new_rgb8(1,1));
+        let (mut success, mut return_img) = (false, DynamicImage::new_rgb8(1, 1));
         match option_menu_selected {
             1 => {
                 (success, return_img) = options::blur(infile.clone());
@@ -80,33 +77,48 @@ fn main() {
             _ => exit(0),
         }
 
-        let yes: [&str; 1] = ["Sim"];
+        let format_image: (String, ImageFormat) = format_image();
+        let file_name: String = file_name();
+
+        let option_outfile_menu: [&str; 2] = [
+            "Sim",
+            "Outro"
+        ];
 
         let mut outfile: String = String::new();
+        let mut format_name_image: String = String::new();
 
         if success {
-            match display_menu("Sua foto foi alterada com sucesso! Deseja salvá-la no mesmo diretório ?", &yes, true) {
-                0 => {
+            match display_menu("Sua foto foi alterada com sucesso! Deseja salvá-la no mesmo diretório ?", &option_outfile_menu, true) {
+                1 => {
+                    outfile = extract_path(&infile);
+                }
+                2 => {
                     println!("Digite abaixo o diretório que deseje salvar a imagem!");
                     stdout().flush().unwrap();
 
                     stdin().read_line(&mut outfile).unwrap();
-                    save_img(&return_img, &outfile);
-                }
 
-                _ => {
-                    save_img(&return_img, &infile);
+                    outfile = extract_path(&outfile);
                 }
+                _ => return
             }
         } else {
             println!("Erro ao converter sua imagem!");
         }
 
+        format_name_image = String::from(format!("{}/{}.{}", outfile, file_name, format_image.0));
+        save_img(&return_img, format_name_image, format_image.1);
+
+        let yes: [&str; 1] = [
+            "Sim"
+        ];
+
         match display_menu("Deseja voltar para o menu inicial ?", &yes, true) {
-            0 => exit(0),
-            _ => {
+            1 => {
                 continue;
             }
+            _ => exit(0),
         }
     }
 
@@ -162,7 +174,7 @@ fn main() {
     //     }
     // }
 }
-
+/*
 fn print_usage_and_exit() {
     println!("USAGE (when in doubt, use a .png extension on your filenames)");
     println!("blur INFILE OUTFILE");
@@ -294,3 +306,4 @@ fn fractal(outfile: String) {
 // - and write the result to outfile.png
 //
 // Good luck!
+*/

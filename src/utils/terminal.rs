@@ -2,7 +2,7 @@ use rpassword::prompt_password;
 use std::io::{stdin, stdout, Write};
 use log::error;
 
-pub fn display_menu(title: &str, items: &[&str], exit: bool) -> u32 {
+pub fn display_menu(title: &str, items: &[&str], exit: bool) -> u8 {
     clear_screen();
 
     let title_complete: String = String::from("Challange Image Rust :: ") + title;
@@ -19,13 +19,13 @@ pub fn display_menu(title: &str, items: &[&str], exit: bool) -> u32 {
     let mut line: String = String::new();
     stdin().read_line(&mut line).unwrap();
 
-    let mut result: u32 = 0;
+    let mut result: u8 = 0;
 
     if let Ok(parsed_value) = line.trim().parse() {
         result = parsed_value;
     } else {
         if let Some(position) = items.iter().position(|&x| x.to_lowercase() == line.trim().to_lowercase()) {
-            result = position as u32
+            result = position as u8
         }
     };
 

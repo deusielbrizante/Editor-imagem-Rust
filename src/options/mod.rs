@@ -1,8 +1,6 @@
 mod blur;
 
-use std::fs::FileType;
-use std::io::{stdin, stdout, Write};
-use std::ptr::eq;
+use std::io::{Write};
 use image::{DynamicImage, ImageError};
 use image::ImageError::{Decoding, Encoding, IoError, Limits, Parameter, Unsupported};
 use crate::options::blur::execute_blur;
@@ -12,7 +10,7 @@ pub fn blur(infile: String) -> (bool, DynamicImage) {
     let mut img: DynamicImage = DynamicImage::new_rgb8(1, 1);
     let mut not_continue: bool = true;
 
-    match process_image(&infile) {
+    match process_image(&infile.trim()) {
         Ok(validate_img) => img = validate_img,
         Err(_) => not_continue = false
     };
@@ -26,7 +24,7 @@ pub fn blur(infile: String) -> (bool, DynamicImage) {
     (not_continue, img_blur)
 }
 
-fn process_image(infile: &String) -> Result<DynamicImage, ImageError> {
+fn process_image(infile: &&str) -> Result<DynamicImage, ImageError> {
     let img: Result<DynamicImage, ImageError> = image::open(infile);
     match img {
         Ok(img) => Ok(img),
