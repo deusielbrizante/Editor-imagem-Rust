@@ -4,16 +4,19 @@ use crate::utils::terminal::clear_screen;
 
 pub fn get_image() -> String {
     let mut infile: String = String::new();
+    clear_screen();
 
     loop {
-        clear_screen();
-
         print!("Mova a foto que deseja adicionar o efeito: ");
         stdout().flush().unwrap();
 
+        infile.clear();
         stdin().read_line(&mut infile).unwrap();
+        clear_screen();
 
-        match ImageFormat::from_path(&infile.trim()) {
+        infile = infile.trim().replace("\"","").replace("\\", "/").to_string();
+
+        match ImageFormat::from_path(&infile) {
             Ok(ok) => break,
             Err(_) => {
                 println!("Arquivo inválido! Envie um arquivo de imagem!");
