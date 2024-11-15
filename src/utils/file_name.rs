@@ -1,7 +1,7 @@
-use std::io::{stdin, stdout, Write};
 use crate::utils::terminal::{clear_screen, display_menu};
+use std::io::{stdin, stdout, Write};
 
-pub fn file_name() -> String{
+pub fn file_name() -> String {
     let mut file_name: String = String::new();
 
     loop {
@@ -12,12 +12,15 @@ pub fn file_name() -> String{
 
         stdin().read_line(&mut file_name).unwrap();
 
-        let phrase:String = format!("Deseja continuar com o nome \"{}\" para o arquivo ?", file_name);
-        match display_menu(&phrase, &["Sim"], false){
+        let phrase: String = format!(
+            "Deseja continuar com o nome \"{}\" para o arquivo ?",
+            file_name
+        );
+        match display_menu(&phrase, &["Sim"], false) {
             1 => break,
-            _ => continue
+            _ => continue,
         }
     }
 
-    file_name
+    file_name.trim().to_string()
 }

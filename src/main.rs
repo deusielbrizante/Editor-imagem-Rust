@@ -25,18 +25,18 @@
 //
 //     let positive_number: u32 = some_string.parse().expect("Failed to parse a number");
 
-mod utils;
 mod options;
+mod utils;
 
-use std::io::{stdin, stdout, Write};
-use std::process::exit;
-use image::{DynamicImage, ImageFormat};
-use utils::terminal::{display_menu, clear_screen};
-use utils::save_image::save_img;
-use utils::extract_path::extract_path;
 use crate::utils::file_name::file_name;
 use crate::utils::format_image::format_image;
 use crate::utils::get_image::get_image;
+use image::{DynamicImage, ImageFormat};
+use std::io::{stdin, stdout, Write};
+use std::process::exit;
+use utils::extract_path::extract_path;
+use utils::save_image::save_img;
+use utils::terminal::{clear_screen, display_menu};
 
 fn main() {
     // 1. First, you need to implement some basic command-line argument handling,
@@ -46,7 +46,7 @@ fn main() {
     // Challenge: If you're feeling really ambitious, you could delete this code
     // and use the "clap" library instead: https://docs.rs/clap/2.32.0/clap/
     loop {
-        let mut infile: String = get_image();
+        let infile: String = get_image();
 
         let items: [&str; 8] = [
             "Blur",
@@ -56,7 +56,7 @@ fn main() {
             "Invert",
             "Grayscale",
             "Generate",
-            "Fractal"
+            "Fractal",
         ];
 
         let option_menu_selected: u8 = display_menu("Home", &items, true);
@@ -80,16 +80,16 @@ fn main() {
         let format_image: (String, ImageFormat) = format_image();
         let file_name: String = file_name();
 
-        let option_outfile_menu: [&str; 2] = [
-            "Sim",
-            "Outro"
-        ];
+        let option_outfile_menu: [&str; 2] = ["Sim", "Outro"];
 
         let mut outfile: String = String::new();
-        let mut format_name_image: String = String::new();
 
         if success {
-            match display_menu("Sua foto foi alterada com sucesso! Deseja salvá-la no mesmo diretório ?", &option_outfile_menu, true) {
+            match display_menu(
+                "Sua foto foi alterada com sucesso! Deseja salvá-la no mesmo diretório ?",
+                &option_outfile_menu,
+                true,
+            ) {
                 1 => {
                     outfile = extract_path(&infile);
                 }
@@ -101,18 +101,17 @@ fn main() {
 
                     outfile = extract_path(&outfile);
                 }
-                _ => return
+                _ => return,
             }
         } else {
             println!("Erro ao converter sua imagem!");
         }
 
-        format_name_image = String::from(format!("{}/{}.{}", outfile, file_name, format_image.0));
+        let format_name_image: String =
+            String::from(format!("{}/{}.{}", outfile, file_name, format_image.0));
         save_img(&return_img, format_name_image, format_image.1);
 
-        let yes: [&str; 1] = [
-            "Sim"
-        ];
+        let yes: [&str; 1] = ["Sim"];
 
         match display_menu("Deseja voltar para o menu inicial ?", &yes, true) {
             1 => {
@@ -250,7 +249,7 @@ fn generate(outfile: String) {
 
     // Challenge 2: Generate something more interesting!
 
-    // See blur() for an example of how to save the image 
+    // See blur() for an example of how to save the image
 }
 
 // This code was adapted from https://github.com/PistonDevelopers/image

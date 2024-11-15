@@ -1,5 +1,5 @@
-use image::{DynamicImage, ImageFormat};
 use crate::utils::terminal::{clear_screen, wait_enter};
+use image::{DynamicImage, ImageFormat};
 
 pub fn save_img(img: &DynamicImage, outfile: String, format: ImageFormat) {
     clear_screen();

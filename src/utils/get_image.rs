@@ -1,6 +1,6 @@
-use std::io::{stdin, stdout, Write};
-use image::ImageFormat;
 use crate::utils::terminal::clear_screen;
+use image::ImageFormat;
+use std::io::{stdin, stdout, Write};
 
 pub fn get_image() -> String {
     let mut infile: String = String::new();
@@ -14,10 +14,15 @@ pub fn get_image() -> String {
         stdin().read_line(&mut infile).unwrap();
         clear_screen();
 
-        infile = infile.trim().replace("\"","").replace("\\", "/").to_string();
+        infile = infile
+            .trim()
+            .replace("\"", "")
+            .replace("\'", "")
+            .replace("\\", "/")
+            .to_string();
 
         match ImageFormat::from_path(&infile) {
-            Ok(ok) => break,
+            Ok(_) => break,
             Err(_) => {
                 println!("Arquivo inválido! Envie um arquivo de imagem!");
                 continue;

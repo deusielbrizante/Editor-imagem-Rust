@@ -1,6 +1,4 @@
-use rpassword::prompt_password;
-use std::io::{stdin, stdout, Write};
-use log::error;
+use std::io::{stdin, stdout, Read, Write};
 
 pub fn display_menu(title: &str, items: &[&str], exit: bool) -> u8 {
     clear_screen();
@@ -24,7 +22,10 @@ pub fn display_menu(title: &str, items: &[&str], exit: bool) -> u8 {
     if let Ok(parsed_value) = line.trim().parse() {
         result = parsed_value;
     } else {
-        if let Some(position) = items.iter().position(|&x| x.to_lowercase() == line.trim().to_lowercase()) {
+        if let Some(position) = items
+            .iter()
+            .position(|&x| x.to_lowercase() == line.trim().to_lowercase())
+        {
             result = position as u8
         }
     };
@@ -39,7 +40,11 @@ pub fn display_items(items: &[&str]) {
 }
 
 pub fn wait_enter() {
-    prompt_password("\nPress ENTER to continue...").unwrap();
+    println!("\nPressione Enter para continuar...");
+    stdout().flush().unwrap();
+
+    let mut buffer: [u8; 1] = [0u8; 1];
+    stdin().read_exact(&mut buffer).unwrap();
 }
 
 pub fn clear_screen() {
