@@ -4,7 +4,7 @@ use crate::{
 };
 use image::DynamicImage;
 
-pub fn blur(infile: String) -> (bool, DynamicImage) {
+pub fn select_option(infile: String, type_execution: TypeExecution) -> (bool, DynamicImage) {
     let mut img: DynamicImage = DynamicImage::new_rgb8(1, 1);
     let mut not_continue: bool = true;
 
@@ -17,5 +17,5 @@ pub fn blur(infile: String) -> (bool, DynamicImage) {
         return (not_continue, img);
     }
 
-    (not_continue, execute_adjusts(img, &TypeExecution::Blur))
+    (not_continue, execute_adjusts(img, &type_execution))
 }

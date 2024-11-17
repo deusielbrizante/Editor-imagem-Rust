@@ -1,7 +1,7 @@
 pub enum TypeExecution {
-    Blur = 1,
-    Brighten = 2,
-    // Crop = 3,
+    Blur,
+    Brighten,
+    Crop,
     // Rotate = 4,
     // Invert = 5,
     // Grayscale = 6,

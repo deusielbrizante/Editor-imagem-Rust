@@ -27,18 +27,18 @@
 
 mod enums;
 mod options;
+mod structs;
 mod utils;
 
-use crate::{
-    options::{blur::blur, brighten::brighten},
-    utils::{file_name::file_name, format_image::format_image, get_image::get_image},
-};
+use crate::utils::{file_name::file_name, format_image::format_image, get_image::get_image};
 
 use std::{
     io::{stdin, stdout, Write},
     process::exit,
 };
 
+use enums::type_execution::TypeExecution;
+use options::select_option::select_option;
 use utils::{
     extract_path::extract_path,
     save_image::save_img,
@@ -73,8 +73,9 @@ fn main() {
         clear_screen();
 
         let (success, return_img): (bool, DynamicImage) = match option_menu_selected {
-            1 => blur(infile.clone()),
-            2 => brighten(infile.clone()),
+            1 => select_option(infile.clone(), TypeExecution::Blur),
+            2 => select_option(infile.clone(), TypeExecution::Brighten),
+            3 => select_option(infile.clone(), TypeExecution::Crop),
             _ => exit(0),
         };
 
