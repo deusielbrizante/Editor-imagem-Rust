@@ -25,18 +25,27 @@
 //
 //     let positive_number: u32 = some_string.parse().expect("Failed to parse a number");
 
+mod enums;
 mod options;
 mod utils;
 
-use crate::utils::file_name::file_name;
-use crate::utils::format_image::format_image;
-use crate::utils::get_image::get_image;
+use crate::{
+    options::{blur::blur, brighten::brighten},
+    utils::{file_name::file_name, format_image::format_image, get_image::get_image},
+};
+
+use std::{
+    io::{stdin, stdout, Write},
+    process::exit,
+};
+
+use utils::{
+    extract_path::extract_path,
+    save_image::save_img,
+    terminal::{clear_screen, display_menu},
+};
+
 use image::{DynamicImage, ImageFormat};
-use std::io::{stdin, stdout, Write};
-use std::process::exit;
-use utils::extract_path::extract_path;
-use utils::save_image::save_img;
-use utils::terminal::{clear_screen, display_menu};
 
 fn main() {
     // 1. First, you need to implement some basic command-line argument handling,
@@ -62,20 +71,12 @@ fn main() {
         let option_menu_selected: u8 = display_menu("Home", &items, true);
 
         clear_screen();
-        let (mut success, mut return_img) = (false, DynamicImage::new_rgb8(1, 1));
-        match option_menu_selected {
-            1 => {
-                (success, return_img) = options::blur(infile.clone());
-            }
-            2 => println!("2"),
-            3 => println!("3"),
-            4 => println!("4"),
-            5 => println!("5"),
-            6 => println!("6"),
-            7 => println!("7"),
-            8 => println!("8"),
+
+        let (success, return_img): (bool, DynamicImage) = match option_menu_selected {
+            1 => blur(infile.clone()),
+            2 => brighten(infile.clone()),
             _ => exit(0),
-        }
+        };
 
         let format_image: (String, ImageFormat) = format_image();
         let file_name: String = file_name();

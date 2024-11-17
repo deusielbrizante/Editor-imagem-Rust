@@ -1,27 +1,21 @@
+use crate::{
+    enums::type_execution::TypeExecution,
+    utils::{execute_adjusts::execute_adjusts, process_image::process_image},
+};
 use image::DynamicImage;
-use std::io::{stdin, stdout, Write};
 
-pub fn execute_blur(img: DynamicImage) -> DynamicImage {
-    // **OPTION**
-    // Parse the blur amount (an f32) from the command-line and pass it through
-    // to this function, instead of hard-coding it to 2.0.
+pub fn blur(infile: String) -> (bool, DynamicImage) {
+    let mut img: DynamicImage = DynamicImage::new_rgb8(1, 1);
+    let mut not_continue: bool = true;
 
-    let mut blur: String = String::new();
-    let blur_value: f32 = loop {
-        print!("Digite a intensidade de blur você quer na imagem: ");
-        stdout().flush().unwrap();
-
-        stdin()
-            .read_line(&mut blur)
-            .expect("Falha ao ler o valor digitado!");
-
-        match blur.trim().parse() {
-            Ok(option) => break option,
-            _ => println!("Digite apenas número!"),
-        }
+    match process_image(&infile.trim()) {
+        Ok(validate_img) => img = validate_img,
+        Err(_) => not_continue = false,
     };
 
-    let img_blur = img.blur(blur_value);
+    if !not_continue {
+        return (not_continue, img);
+    }
 
-    img_blur
+    (not_continue, execute_adjusts(img, &TypeExecution::Blur))
 }
