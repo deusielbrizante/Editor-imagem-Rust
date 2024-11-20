@@ -26,26 +26,22 @@
 //     let positive_number: u32 = some_string.parse().expect("Failed to parse a number");
 
 mod enums;
-mod options;
 mod structs;
 mod utils;
 
-use crate::utils::{file_name::file_name, format_image::format_image, get_image::get_image};
-
-use std::{
-    io::{stdin, stdout, Write},
-    process::exit,
-};
-
-use enums::type_execution::TypeExecution;
-use options::select_option::select_option;
-use utils::{
-    extract_path::extract_path,
-    save_image::save_img,
-    terminal::{clear_screen, display_menu},
-};
-
 use image::{DynamicImage, ImageFormat};
+use utils::select_option::select_generate_option;
+use std::process::exit;
+
+use crate::{
+    enums::type_execution::TypeExecution,
+    utils::{
+        image::{format_image, get_image, get_image_name, save_image},
+        path::get_path_image,
+        select_option::select_simple_option,
+        terminal::{clear_screen, display_menu},
+    },
+};
 
 fn main() {
     // 1. First, you need to implement some basic command-line argument handling,
@@ -55,63 +51,49 @@ fn main() {
     // Challenge: If you're feeling really ambitious, you could delete this code
     // and use the "clap" library instead: https://docs.rs/clap/2.32.0/clap/
     loop {
-        let infile: String = get_image();
+        let mut infile: String = String::new();
 
-        let items: [&str; 8] = [
+        let items: [&str; 7] = [
             "Blur",
             "Brighten",
             "Crop",
             "Rotate",
             "Invert",
             "Grayscale",
-            "Generate",
-            "Fractal",
+            "Generate Image",
         ];
 
         let option_menu_selected: u8 = display_menu("Home", &items, true);
 
+        if option_menu_selected != 7 {
+            infile = get_image();
+        }
+
         clear_screen();
 
         let (success, return_img): (bool, DynamicImage) = match option_menu_selected {
-            1 => select_option(infile.clone(), TypeExecution::Blur),
-            2 => select_option(infile.clone(), TypeExecution::Brighten),
-            3 => select_option(infile.clone(), TypeExecution::Crop),
+            1 => select_simple_option(infile.clone(), TypeExecution::Blur),
+            2 => select_simple_option(infile.clone(), TypeExecution::Brighten),
+            3 => select_simple_option(infile.clone(), TypeExecution::Crop),
+            4 => select_simple_option(infile.clone(), TypeExecution::Rotate),
+            5 => select_simple_option(infile.clone(), TypeExecution::Invert),
+            6 => select_simple_option(infile.clone(), TypeExecution::Grayscale),
+            7 => select_generate_option(),
             _ => exit(0),
         };
 
         let format_image: (String, ImageFormat) = format_image();
-        let file_name: String = file_name();
-
-        let option_outfile_menu: [&str; 2] = ["Sim", "Outro"];
-
-        let mut outfile: String = String::new();
+        let file_name: String = get_image_name();
 
         if success {
-            match display_menu(
-                "Sua foto foi alterada com sucesso! Deseja salvá-la no mesmo diretório ?",
-                &option_outfile_menu,
-                true,
-            ) {
-                1 => {
-                    outfile = extract_path(&infile);
-                }
-                2 => {
-                    println!("Digite abaixo o diretório que deseje salvar a imagem!");
-                    stdout().flush().unwrap();
+            let outfile: String = get_path_image(&mut infile, option_menu_selected);
 
-                    stdin().read_line(&mut outfile).unwrap();
-
-                    outfile = extract_path(&outfile);
-                }
-                _ => return,
-            }
+            let format_name_image: String =
+                String::from(format!("{}/{}.{}", outfile, file_name, format_image.0));
+            save_image(&return_img, format_name_image, format_image.1);
         } else {
             println!("Erro ao converter sua imagem!");
         }
-
-        let format_name_image: String =
-            String::from(format!("{}/{}.{}", outfile, file_name, format_image.0));
-        save_img(&return_img, format_name_image, format_image.1);
 
         let yes: [&str; 1] = ["Sim"];
 
@@ -176,69 +158,6 @@ fn main() {
     // }
 }
 /*
-fn print_usage_and_exit() {
-    println!("USAGE (when in doubt, use a .png extension on your filenames)");
-    println!("blur INFILE OUTFILE");
-    println!("fractal OUTFILE");
-    // **OPTION**
-    // Print useful information about what subcommands and arguments you can use
-    // println!("...");
-    std::process::exit(-1);
-}
-
-fn brighten(infile: String, outfile: String) {
-    // See blur() for an example of how to open / save an image.
-
-    // .brighten() takes one argument, an i32.  Positive numbers brighten the
-    // image. Negative numbers darken it.  It returns a new image.
-
-    // Challenge: parse the brightness amount from the command-line and pass it
-    // through to this function.
-}
-
-fn crop(infile: String, outfile: String) {
-    // See blur() for an example of how to open an image.
-
-    // .crop() takes four arguments: x: u32, y: u32, width: u32, height: u32
-    // You may hard-code them, if you like.  It returns a new image.
-
-    // Challenge: parse the four values from the command-line and pass them
-    // through to this function.
-
-    // See blur() for an example of how to save the image.
-}
-
-fn rotate(infile: String, outfile: String) {
-    // See blur() for an example of how to open an image.
-
-    // There are 3 rotate functions to choose from (all clockwise):
-    //   .rotate90()
-    //   .rotate180()
-    //   .rotate270()
-    // All three methods return a new image.  Pick one and use it!
-
-    // Challenge: parse the rotation amount from the command-line, pass it
-    // through to this function to select which method to call.
-
-    // See blur() for an example of how to save the image.
-}
-
-fn invert(infile: String, outfile: String) {
-    // See blur() for an example of how to open an image.
-
-    // .invert() takes no arguments and converts the image in-place, so you
-    // will use the same image to save out to a different file.
-
-    // See blur() for an example of how to save the image.
-}
-
-fn grayscale(infile: String, outfile: String) {
-    // See blur() for an example of how to open an image.
-
-    // .grayscale() takes no arguments. It returns a new image.
-
-    // See blur() for an example of how to save the image.
-}
 
 fn generate(outfile: String) {
     // Create an ImageBuffer -- see fractal() for an example

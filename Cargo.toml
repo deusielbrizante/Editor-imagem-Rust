@@ -1,3 +1,6 @@
+[profile.release]
+debug = true
+
 [package]
 name = "mirage"
 version = "0.1.0"
@@ -8,3 +11,4 @@ image = "0.24.3"
 num-complex = "0.4.2"
 rpassword = "7.3.1"
 log = "0.4.21"
+rand = "0.8.5"

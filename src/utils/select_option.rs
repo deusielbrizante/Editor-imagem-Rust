@@ -1,10 +1,13 @@
 use crate::{
     enums::type_execution::TypeExecution,
-    utils::{execute_adjusts::execute_adjusts, process_image::process_image},
+    utils::{
+        execute_adjusts::execute_adjusts,
+        generate_image::performs_creation::perform_generate_image, image::process_image,
+    },
 };
 use image::DynamicImage;
 
-pub fn select_option(infile: String, type_execution: TypeExecution) -> (bool, DynamicImage) {
+pub fn select_simple_option(infile: String, type_execution: TypeExecution) -> (bool, DynamicImage) {
     let mut img: DynamicImage = DynamicImage::new_rgb8(1, 1);
     let mut not_continue: bool = true;
 
@@ -18,4 +21,8 @@ pub fn select_option(infile: String, type_execution: TypeExecution) -> (bool, Dy
     }
 
     (not_continue, execute_adjusts(img, &type_execution))
+}
+
+pub fn select_generate_option() -> (bool, DynamicImage) {
+    (true, perform_generate_image())
 }

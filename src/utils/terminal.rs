@@ -17,20 +17,18 @@ pub fn display_menu(title: &str, items: &[&str], exit: bool) -> u8 {
     let mut line: String = String::new();
     stdin().read_line(&mut line).unwrap();
 
-    let mut result: u8 = 0;
-
     if let Ok(parsed_value) = line.trim().parse() {
-        result = parsed_value;
+        return parsed_value;
     } else {
         if let Some(position) = items
             .iter()
             .position(|&x| x.to_lowercase() == line.trim().to_lowercase())
         {
-            result = position as u8
+            return position as u8;
         }
-    };
 
-    result
+        0
+    }
 }
 
 pub fn display_items(items: &[&str]) {
