@@ -18,43 +18,43 @@ use crate::{
 };
 use image::DynamicImage;
 
-pub fn perform_blur_brightness(type_execution: &TypeExecution, img: DynamicImage) -> DynamicImage {
+pub fn perform_blur_brightness(type_execution: &TypeExecution, img: &mut DynamicImage) {
     let phrases: [&str; 2] = [
         "Digite a intensidade de blur você quer na imagem: ",
         "Digite a intensidade de brilho você quer na imagem: ",
     ];
 
-    match type_execution {
+    *img = match type_execution {
         TypeExecution::Blur => img.blur(require_values(phrases[0])),
         TypeExecution::Brighten => img.brighten(require_values(phrases[1]).round() as i32),
-        _ => img,
-    }
+        _ => img.clone(),
+    };
 }
 
-pub fn perform_crop(img: &DynamicImage) -> DynamicImage {
+pub fn perform_crop(img: &mut DynamicImage) {
     let values_crop: CropValues = require_values_crop(img.width(), img.height());
 
-    img.clone().crop(
+    *img = img.crop(
         values_crop.x,
         values_crop.y,
         values_crop.width,
         values_crop.height,
-    )
+    );
 }
 
-pub fn perform_rotate(img: DynamicImage) -> DynamicImage {
-    match require_values_rotation() as u32 {
+pub fn perform_rotate(img: &mut DynamicImage) {
+    *img = match require_values_rotation() as u32 {
         1 => img.rotate90(),
         2 => img.rotate180(),
         3 => img.rotate270(),
-        _ => img,
-    }
+        _ => img.clone(),
+    };
 }
 
-pub fn perform_invert(img: &DynamicImage) -> DynamicImage {
-    let mut img_inverted = img.clone();
+pub fn perform_invert(img: &mut DynamicImage) {
+    let mut img_inverted: DynamicImage = img.clone();
     img_inverted.invert();
-    img_inverted
+    *img = img_inverted;
 }
 
 pub fn perform_generate_image() -> DynamicImage {

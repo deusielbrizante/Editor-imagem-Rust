@@ -6,14 +6,16 @@ use crate::{
 };
 use image::DynamicImage;
 
-pub fn execute_adjusts(img: DynamicImage, type_execution: &TypeExecution) -> DynamicImage {
+pub fn execute_adjusts(img: &mut DynamicImage, type_execution: &TypeExecution) {
     match type_execution {
         TypeExecution::Blur | TypeExecution::Brighten => {
-            perform_blur_brightness(type_execution, img)
+            perform_blur_brightness(type_execution, img);
         }
-        TypeExecution::Crop => perform_crop(&img),
+        TypeExecution::Crop => perform_crop(img),
         TypeExecution::Rotate => perform_rotate(img),
-        TypeExecution::Invert => perform_invert(&img),
-        TypeExecution::Grayscale => img.grayscale(),
-    }
+        TypeExecution::Invert => perform_invert(img),
+        TypeExecution::Grayscale => {
+            *img = img.grayscale();
+        }
+    };
 }

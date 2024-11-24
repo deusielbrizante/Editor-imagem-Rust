@@ -51,6 +51,7 @@ pub fn get_image_name() -> String {
             "Deseja continuar com o nome \"{}\" para o arquivo ?",
             img_name.trim()
         );
+        
         match display_menu(&phrase, &["Sim"], false) {
             1 => break,
             _ => continue,
