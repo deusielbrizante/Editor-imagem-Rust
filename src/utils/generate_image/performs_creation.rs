@@ -11,8 +11,8 @@ use crate::{
     utils::generate_image::{
         generated_image::generate_image,
         require_values::{
-            require_gradient_values, require_other_values, require_values, require_values_crop,
-            require_values_generation_image, require_values_rotation,
+            require_fractal_values, require_gradient_values, require_other_values, require_values,
+            require_values_crop, require_values_generation_image, require_values_rotation,
         },
     },
 };
@@ -32,8 +32,7 @@ pub fn perform_blur_brightness(type_execution: &TypeExecution, img: DynamicImage
 }
 
 pub fn perform_crop(img: &DynamicImage) -> DynamicImage {
-    let mut values_crop: CropValues = CropValues::new();
-    require_values_crop(&mut values_crop, img.width(), img.height());
+    let values_crop: CropValues = require_values_crop(img.width(), img.height());
 
     img.clone().crop(
         values_crop.x,
@@ -66,20 +65,29 @@ pub fn perform_generate_image() -> DynamicImage {
             let (gradient_values, type_gradient): (GeneratedGradientImage, TypeGradient) =
                 require_gradient_values();
 
-            return generate_image(
+            generate_image(
                 TypeGenerationData::Gradient(gradient_values),
                 type_generated,
                 type_gradient,
-            );
+            )
         }
-        _ => {
-            let generated_values: GeneratedImage = require_other_values();
+        TypeGeneration::Fractal => {
+            let generated_values: GeneratedImage = require_fractal_values();
 
-            return generate_image(
-                TypeGenerationData::Solid(generated_values),
+            generate_image(
+                TypeGenerationData::Defaults(generated_values),
                 type_generated,
                 TypeGradient::Horizontal,
-            );
+            )
+        }
+        TypeGeneration::Solid | TypeGeneration::Waves => {
+            let generated_values: GeneratedImage = require_other_values();
+
+            generate_image(
+                TypeGenerationData::Defaults(generated_values),
+                type_generated,
+                TypeGradient::Horizontal,
+            )
         }
     }
 }

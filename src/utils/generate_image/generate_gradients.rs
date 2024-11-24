@@ -2,9 +2,10 @@ use crate::structs::generated::GeneratedGradientImage;
 use image::RgbImage;
 
 pub fn gradient_horizontal(
-    img_buffer: &mut RgbImage,
     image_values: GeneratedGradientImage,
 ) -> RgbImage {
+    let mut img_buffer = RgbImage::new(image_values.width, image_values.height);
+
     for (x, _y, pixel) in img_buffer.enumerate_pixels_mut() {
         let t = x as f32 / (image_values.width - 1) as f32;
         let red = ((1.0 - t) * image_values.start_rgb.red as f32
@@ -16,13 +17,14 @@ pub fn gradient_horizontal(
         *pixel = image::Rgb([red, green, blue]);
     }
 
-    img_buffer.clone()
+    img_buffer
 }
 
 pub fn gradient_vertical(
-    img_buffer: &mut RgbImage,
     image_values: GeneratedGradientImage,
 ) -> RgbImage {
+    let mut img_buffer = RgbImage::new(image_values.width, image_values.height);
+
     for (_x, y, pixel) in img_buffer.enumerate_pixels_mut() {
         let t = y as f32 / (image_values.height - 1) as f32;
         let red = ((1.0 - t) * image_values.start_rgb.red as f32
@@ -34,13 +36,14 @@ pub fn gradient_vertical(
         *pixel = image::Rgb([red, green, blue]);
     }
 
-    img_buffer.clone()
+    img_buffer
 }
 
 pub fn gradient_diagonal(
-    img_buffer: &mut RgbImage,
     image_values: GeneratedGradientImage,
 ) -> RgbImage {
+    let mut img_buffer = RgbImage::new(image_values.width, image_values.height);
+
     for (x, y, pixel) in img_buffer.enumerate_pixels_mut() {
         let t = (x + y) as f32 / (image_values.width + image_values.height) as f32;
         let red = ((1.0 - t) * image_values.start_rgb.red as f32
@@ -52,13 +55,14 @@ pub fn gradient_diagonal(
         *pixel = image::Rgb([red, green, blue]);
     }
 
-    img_buffer.clone()
+    img_buffer
 }
 
 pub fn gradient_radial(
-    img_buffer: &mut RgbImage,
     image_values: GeneratedGradientImage,
 ) -> RgbImage {
+    let mut img_buffer = RgbImage::new(image_values.width, image_values.height);
+
     let center_x = image_values.width as f32 / 2.0;
     let center_y = image_values.height as f32 / 2.0;
     let max_distance = (center_x.powi(2) + center_y.powi(2)).sqrt();
@@ -77,5 +81,5 @@ pub fn gradient_radial(
         *pixel = image::Rgb([red, green, blue]);
     }
 
-    img_buffer.clone()
+    img_buffer
 }

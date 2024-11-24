@@ -26,7 +26,7 @@ pub fn get_path_image(infile: &mut String, option_selected: u8) -> String {
                 loop {
                     let mut path_save: String = String::new();
 
-                    println!("Digite abaixo o diretório que deseje salvar a imagem!");
+                    println!("Digite abaixo o diretório que deseje salvar a imagem:\n");
                     stdout().flush().unwrap();
 
                     stdin().read_line(&mut path_save).unwrap();

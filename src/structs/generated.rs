@@ -7,16 +7,6 @@ pub struct GeneratedImage {
 }
 
 impl GeneratedImage {
-    // pub fn new(width: u32, height: u32, r: u8, g: u8, b: u8) -> GeneratedSolidImage {
-    //     GeneratedSolidImage {
-    //         width,
-    //         height,
-    //         red: r,
-    //         green: g,
-    //         blue: b,
-    //     }
-    // }
-
     pub fn new() -> GeneratedImage {
         GeneratedImage {
             width: 0,

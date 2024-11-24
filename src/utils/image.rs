@@ -41,6 +41,7 @@ pub fn get_image_name() -> String {
     loop {
         clear_screen();
 
+        img_name.clear();
         print!("Digite o nome que deseja dar para sua foto: ");
         stdout().flush().unwrap();
 

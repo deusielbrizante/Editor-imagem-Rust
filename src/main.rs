@@ -29,19 +29,17 @@ mod enums;
 mod structs;
 mod utils;
 
-use image::{DynamicImage, ImageFormat};
-use utils::select_option::select_generate_option;
-use std::process::exit;
-
 use crate::{
     enums::type_execution::TypeExecution,
     utils::{
         image::{format_image, get_image, get_image_name, save_image},
         path::get_path_image,
-        select_option::select_simple_option,
+        select_option::{select_generate_option, select_simple_option},
         terminal::{clear_screen, display_menu},
     },
 };
+use image::{DynamicImage, ImageFormat};
+use std::process::exit;
 
 fn main() {
     // 1. First, you need to implement some basic command-line argument handling,
@@ -95,9 +93,7 @@ fn main() {
             println!("Erro ao converter sua imagem!");
         }
 
-        let yes: [&str; 1] = ["Sim"];
-
-        match display_menu("Deseja voltar para o menu inicial ?", &yes, true) {
+        match display_menu("Deseja voltar para o menu inicial ?", &["Sim"], true) {
             1 => {
                 continue;
             }

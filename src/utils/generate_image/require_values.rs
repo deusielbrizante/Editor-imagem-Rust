@@ -23,6 +23,8 @@ pub fn require_values(phrase: &str) -> f32 {
             Ok(option) => break option,
             _ => println!("Digite apenas números!"),
         }
+
+        image_adjusted.clear();
     }
 }
 
@@ -103,6 +105,52 @@ pub fn require_other_values() -> GeneratedImage {
         }
 
         break value_temp as u8;
+    };
+
+    generated_values
+}
+
+pub fn require_fractal_values() -> GeneratedImage {
+    let mut generated_values: GeneratedImage = GeneratedImage::new();
+
+    let phrases: [&str; 2] = [
+        "Digite a largura da imagem que deseja gerar: ",
+        "Digite a altura da imagem que deseja gerar: "
+    ];
+
+    generated_values.width = loop {
+        let value_temp: f32 = require_values(phrases[0]);
+
+        if value_temp < 1.0 {
+            println!("O valor da 'largura' não pode ser menor que 1!\n");
+            continue;
+        }
+
+        if value_temp > u32::MAX as f32 {
+            println!(
+                "O valor da 'largura' não pode ser maior que {}!\n",
+                u32::MAX
+            );
+            continue;
+        }
+
+        break value_temp as u32;
+    };
+
+    generated_values.height = loop {
+        let value_temp: f32 = require_values(phrases[1]);
+
+        if value_temp < 1.0 {
+            println!("O valor da 'altura' não pode ser menor que 1!\n");
+            continue;
+        }
+
+        if value_temp > u32::MAX as f32 {
+            println!("O valor da 'altura' não pode ser maior que {}!\n", u32::MAX);
+            continue;
+        }
+
+        break value_temp as u32;
     };
 
     generated_values
@@ -246,7 +294,9 @@ pub fn require_gradient_values() -> (GeneratedGradientImage, TypeGradient) {
     (gradient_values, type_gradient)
 }
 
-pub fn require_values_crop(values_crop: &mut CropValues, width_image: u32, height_image: u32) {
+pub fn require_values_crop(width_image: u32, height_image: u32) -> CropValues {
+    let mut values_crop: CropValues = CropValues::new();
+    
     let phrases: [&str; 4] = [
         "\nDigite o local que será recortado a imagem no eixo 'x': ",
         "\nDigite o local que será recortado a imagem no eixo 'y': ",
@@ -302,6 +352,8 @@ pub fn require_values_crop(values_crop: &mut CropValues, width_image: u32, heigh
 
         break;
     }
+
+    values_crop
 }
 
 pub fn require_values_rotation() -> f32 {
@@ -329,6 +381,7 @@ pub fn require_values_generation_image() -> TypeGeneration {
             println!("Digite uma das opções acima!\n");
             continue;
         }
+
         clear_screen();
 
         break match value_temp as u32 {

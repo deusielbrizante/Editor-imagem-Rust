@@ -9,5 +9,5 @@ pub enum TypeGeneration {
 
 pub enum TypeGenerationData {
     Gradient(GeneratedGradientImage),
-    Solid(GeneratedImage),
+    Defaults(GeneratedImage),
 }

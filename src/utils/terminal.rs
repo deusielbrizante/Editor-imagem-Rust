@@ -18,16 +18,16 @@ pub fn display_menu(title: &str, items: &[&str], exit: bool) -> u8 {
     stdin().read_line(&mut line).unwrap();
 
     if let Ok(parsed_value) = line.trim().parse() {
-        return parsed_value;
+        parsed_value
     } else {
         if let Some(position) = items
             .iter()
             .position(|&x| x.to_lowercase() == line.trim().to_lowercase())
         {
-            return position as u8;
+            position as u8
+        } else {
+            0
         }
-
-        0
     }
 }
 
