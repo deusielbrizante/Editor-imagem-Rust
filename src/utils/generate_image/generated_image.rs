@@ -11,6 +11,7 @@ use crate::{
 use image::{DynamicImage, RgbImage};
 use num_complex::Complex;
 use rand::{rngs::ThreadRng, Rng};
+use rayon::iter::{ParallelBridge, ParallelIterator};
 
 pub fn generate_image(
     image_values: TypeGenerationData,
@@ -38,9 +39,9 @@ pub fn generate_image(
 fn generate_solid(image_values: GeneratedImage) -> RgbImage {
     let mut img_buffer = RgbImage::new(image_values.width, image_values.height);
 
-    for pixel in img_buffer.pixels_mut() {
+    img_buffer.pixels_mut().par_bridge().for_each(|pixel| {
         *pixel = image::Rgb([image_values.red, image_values.green, image_values.blue]);
-    }
+    });
 
     img_buffer
 }
@@ -62,36 +63,41 @@ fn generate_waves(image_values: GeneratedImage) -> RgbImage {
     let blue_direction_x: f32 = rng.gen_range(0.05..0.5);
     let blue_direction_y: f32 = rng.gen_range(0.05..0.5);
 
-    for (x, y, pixel) in img_buffer.enumerate_pixels_mut() {
-        let red: u8 = ((x as f32 * red_direction_x + y as f32 * red_direction_y + red_phase).sin()
-            * 127.0
-            + 128.0) as u8;
-        let green: u8 =
-            ((x as f32 * green_direction_x + y as f32 * green_direction_y + green_phase).cos()
+    img_buffer
+        .enumerate_pixels_mut()
+        .par_bridge()
+        .for_each(|(x, y, pixel)| {
+            let red: u8 = ((x as f32 * red_direction_x + y as f32 * red_direction_y + red_phase)
+                .sin()
                 * 127.0
                 + 128.0) as u8;
-        let blue: u8 =
-            ((x as f32 * blue_direction_x + y as f32 * blue_direction_y + blue_phase).sin() * 127.0
-                + 128.0) as u8;
+            let green: u8 =
+                ((x as f32 * green_direction_x + y as f32 * green_direction_y + green_phase).cos()
+                    * 127.0
+                    + 128.0) as u8;
+            let blue: u8 =
+                ((x as f32 * blue_direction_x + y as f32 * blue_direction_y + blue_phase).sin()
+                    * 127.0
+                    + 128.0) as u8;
 
-        *pixel = image::Rgb([
-            if image_values.red != 0 {
-                red % image_values.red
-            } else {
-                0
-            },
-            if image_values.green != 0 {
-                green % image_values.green
-            } else {
-                0
-            },
-            if image_values.blue != 0 {
-                blue % image_values.blue
-            } else {
-                0
-            },
-        ]);
-    }
+            *pixel = image::Rgb([
+                if image_values.red != 0 {
+                    red % image_values.red
+                } else {
+                    0
+                },
+                if image_values.green != 0 {
+                    green % image_values.green
+                } else {
+                    0
+                },
+                if image_values.blue != 0 {
+                    blue % image_values.blue
+                } else {
+                    0
+                },
+            ]);
+        });
 
     img_buffer
 }
@@ -118,34 +124,37 @@ fn generate_fractal(image_values: GeneratedImage) -> RgbImage {
     let offset_x: f32 = rng.gen_range(-0.2..=0.2);
     let offset_y: f32 = rng.gen_range(-0.2..=0.2);
 
-    for (x, y, pixel) in img_buffer.enumerate_pixels_mut() {
-        let cx: f32 = y as f32 * scale_x - (scale_base / 2.0) + offset_x;
-        let cy: f32 = x as f32 * scale_y - (scale_base / 2.0) + offset_y;
+    img_buffer
+        .enumerate_pixels_mut()
+        .par_bridge()
+        .for_each(|(x, y, pixel)| {
+            let cx: f32 = y as f32 * scale_x - (scale_base / 2.0) + offset_x;
+            let cy: f32 = x as f32 * scale_y - (scale_base / 2.0) + offset_y;
 
-        let c: Complex<f32> = num_complex::Complex::new(-0.4, 0.6);
-        let mut z: Complex<f32> = num_complex::Complex::new(cx, cy);
+            let c: Complex<f32> = num_complex::Complex::new(-0.4, 0.6);
+            let mut z: Complex<f32> = num_complex::Complex::new(cx, cy);
 
-        let mut fractal: u32 = 0;
-        while fractal < 255 && z.norm() <= 2.0 {
-            z = z * z + c;
-            fractal += 1;
-        }
+            let mut fractal: u32 = 0;
+            while fractal < 255 && z.norm() <= 2.0 {
+                z = z * z + c;
+                fractal += 1;
+            }
 
-        let red: u8 = (red_base as f32 * (fractal as f32 / 255.0)) as u8;
-        let green: u8 = (green_base as f32 * (fractal as f32 / 255.0)) as u8;
-        let blue: u8 = (blue_base as f32 * (fractal as f32 / 255.0)) as u8;
+            let red: u8 = (red_base as f32 * (fractal as f32 / 255.0)) as u8;
+            let green: u8 = (green_base as f32 * (fractal as f32 / 255.0)) as u8;
+            let blue: u8 = (blue_base as f32 * (fractal as f32 / 255.0)) as u8;
 
-        let bg_color: [u8; 3] = pixel.0;
+            let bg_color: [u8; 3] = pixel.0;
 
-        let mixed_red: u8 =
-            (red as f32 * blend_factor + bg_color[0] as f32 * (1.0 - blend_factor)) as u8;
-        let mixed_green: u8 =
-            (green as f32 * blend_factor + bg_color[1] as f32 * (1.0 - blend_factor)) as u8;
-        let mixed_blue: u8 =
-            (blue as f32 * blend_factor + bg_color[2] as f32 * (1.0 - blend_factor)) as u8;
+            let mixed_red: u8 =
+                (red as f32 * blend_factor + bg_color[0] as f32 * (1.0 - blend_factor)) as u8;
+            let mixed_green: u8 =
+                (green as f32 * blend_factor + bg_color[1] as f32 * (1.0 - blend_factor)) as u8;
+            let mixed_blue: u8 =
+                (blue as f32 * blend_factor + bg_color[2] as f32 * (1.0 - blend_factor)) as u8;
 
-        *pixel = image::Rgb([mixed_red, mixed_green, mixed_blue]);
-    }
+            *pixel = image::Rgb([mixed_red, mixed_green, mixed_blue]);
+        });
 
     img_buffer
 }

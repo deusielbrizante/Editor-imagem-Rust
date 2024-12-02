@@ -3,15 +3,15 @@ use std::io::{stdin, stdout, Read, Write};
 pub fn display_menu(title: &str, items: &[&str], exit: bool) -> u8 {
     clear_screen();
 
-    let title_complete: String = String::from("Challange Image Rust :: ") + title;
+    let title_complete: String = String::from("Desafio Image Rust :: ") + title;
     println!("{}", title_complete);
     println!("{}", String::from("=").repeat(title_complete.len()));
 
     display_items(items);
 
-    println!("{}", if exit { "* - Exit" } else { "* - Back" });
+    println!("{}", if exit { "* - Sair" } else { "* - Voltar" });
 
-    print!("\nSelect an option: ");
+    print!("\nSelecione alguma das opções: ");
     stdout().flush().unwrap();
 
     let mut line: String = String::new();

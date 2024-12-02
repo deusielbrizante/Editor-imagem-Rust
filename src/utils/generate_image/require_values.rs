@@ -34,9 +34,9 @@ pub fn require_other_values() -> GeneratedImage {
     let phrases: [&str; 5] = [
         "Digite a largura da imagem que deseja gerar: ",
         "Digite a altura da imagem que deseja gerar: ",
-        "Digite o valor de 'red' que deseja para a imagem: ",
-        "Digite o valor de 'green' que deseja para a imagem: ",
-        "Digite o valor de 'blue' que deseja para a imagem: ",
+        "Digite o valor de 'vermelho' que deseja para a imagem: ",
+        "Digite o valor de 'verde' que deseja para a imagem: ",
+        "Digite o valor de 'azul' que deseja para a imagem: ",
     ];
 
     generated_values.width = loop {
@@ -78,7 +78,7 @@ pub fn require_other_values() -> GeneratedImage {
         let value_temp: f32 = require_values(phrases[2]);
 
         if value_temp > 255.0 || value_temp < 0.0 {
-            println!("O valor de 'red' deve ser entre 0 e 255!\n");
+            println!("O valor de 'vermelho' deve ser entre 0 e 255!\n");
             continue;
         }
 
@@ -89,7 +89,7 @@ pub fn require_other_values() -> GeneratedImage {
         let value_temp: f32 = require_values(phrases[3]);
 
         if value_temp < 0.0 || value_temp > 255.0 {
-            println!("O valor de 'green' deve ser entre 0 e 255!\n");
+            println!("O valor de 'verde' deve ser entre 0 e 255!\n");
             continue;
         }
 
@@ -100,7 +100,7 @@ pub fn require_other_values() -> GeneratedImage {
         let value_temp: f32 = require_values(phrases[4]);
 
         if value_temp < 0.0 || value_temp > 255.0 {
-            println!("O valor de 'blue' deve ser entre 0 e 255!\n");
+            println!("O valor de 'azul' deve ser entre 0 e 255!\n");
             continue;
         }
 
@@ -115,7 +115,7 @@ pub fn require_fractal_values() -> GeneratedImage {
 
     let phrases: [&str; 2] = [
         "Digite a largura da imagem que deseja gerar: ",
-        "Digite a altura da imagem que deseja gerar: "
+        "Digite a altura da imagem que deseja gerar: ",
     ];
 
     generated_values.width = loop {
@@ -162,13 +162,13 @@ pub fn require_gradient_values() -> (GeneratedGradientImage, TypeGradient) {
     let phrases: [&str; 9] = [
         "Digite a largura do gradiente que deseja gerar: ",
         "Digite a altura do gradiente que deseja gerar: ",
-        "Digite o valor inicial de 'red' que deseja para o gradiente: ",
-        "Digite o valor inicial de 'green' que deseja para o gradiente: ",
-        "Digite o valor inicial de 'blue' que deseja para o gradiente: ",
-        "Digite o valor final de 'red' que deseja para o gradiente: ",
-        "Digite o valor final de 'green' que deseja para o gradiente: ",
-        "Digite o valor final de 'blue' que deseja para o gradiente: ",
-        "Digite o tipo de gradiente que deseja gerar:\n\n1 - Horizontal\n2 - Vertical\n3 - Diagonal\n4 - Radial\n\nSelect an option: ",
+        "Digite o valor inicial de 'vermelho' que deseja para o gradiente: ",
+        "Digite o valor inicial de 'verde' que deseja para o gradiente: ",
+        "Digite o valor inicial de 'azul' que deseja para o gradiente: ",
+        "Digite o valor final de 'vermelho' que deseja para o gradiente: ",
+        "Digite o valor final de 'verde' que deseja para o gradiente: ",
+        "Digite o valor final de 'azul' que deseja para o gradiente: ",
+        "Digite o tipo de gradiente que deseja gerar:\n\n1 - Horizontal\n2 - Vertical\n3 - Diagonal\n4 - Radial\n\nSelecione alguma das opções: ",
     ];
 
     gradient_values.width = loop {
@@ -210,7 +210,7 @@ pub fn require_gradient_values() -> (GeneratedGradientImage, TypeGradient) {
         let value_temp: f32 = require_values(phrases[2]);
 
         if value_temp > 255.0 || value_temp < 0.0 {
-            println!("O valor de 'red' deve ser entre 0 e 255!\n");
+            println!("O valor de 'vermelho' deve ser entre 0 e 255!\n");
             continue;
         }
 
@@ -221,7 +221,7 @@ pub fn require_gradient_values() -> (GeneratedGradientImage, TypeGradient) {
         let value_temp: f32 = require_values(phrases[3]);
 
         if value_temp < 0.0 || value_temp > 255.0 {
-            println!("O valor de 'green' deve ser entre 0 e 255!\n");
+            println!("O valor de 'verde' deve ser entre 0 e 255!\n");
             continue;
         }
 
@@ -232,7 +232,7 @@ pub fn require_gradient_values() -> (GeneratedGradientImage, TypeGradient) {
         let value_temp: f32 = require_values(phrases[4]);
 
         if value_temp < 0.0 || value_temp > 255.0 {
-            println!("O valor de 'blue' deve ser entre 0 e 255!\n");
+            println!("O valor de 'azul' deve ser entre 0 e 255!\n");
             continue;
         }
 
@@ -243,7 +243,7 @@ pub fn require_gradient_values() -> (GeneratedGradientImage, TypeGradient) {
         let value_temp: f32 = require_values(phrases[5]);
 
         if value_temp > 255.0 || value_temp < 0.0 {
-            println!("O valor de 'red' deve ser entre 0 e 255!\n");
+            println!("O valor de 'vermelho' deve ser entre 0 e 255!\n");
             continue;
         }
 
@@ -254,7 +254,7 @@ pub fn require_gradient_values() -> (GeneratedGradientImage, TypeGradient) {
         let value_temp: f32 = require_values(phrases[6]);
 
         if value_temp < 0.0 || value_temp > 255.0 {
-            println!("O valor de 'green' deve ser entre 0 e 255!\n");
+            println!("O valor de 'verde' deve ser entre 0 e 255!\n");
             continue;
         }
 
@@ -265,7 +265,7 @@ pub fn require_gradient_values() -> (GeneratedGradientImage, TypeGradient) {
         let value_temp: f32 = require_values(phrases[7]);
 
         if value_temp < 0.0 || value_temp > 255.0 {
-            println!("O valor de 'blue' deve ser entre 0 e 255!\n");
+            println!("O valor de 'azul' deve ser entre 0 e 255!\n");
             continue;
         }
 
@@ -296,7 +296,7 @@ pub fn require_gradient_values() -> (GeneratedGradientImage, TypeGradient) {
 
 pub fn require_values_crop(width_image: u32, height_image: u32) -> CropValues {
     let mut values_crop: CropValues = CropValues::new();
-    
+
     let phrases: [&str; 4] = [
         "\nDigite o local que será recortado a imagem no eixo 'x': ",
         "\nDigite o local que será recortado a imagem no eixo 'y': ",
@@ -360,7 +360,7 @@ pub fn require_values_rotation() -> f32 {
     print!("Escolha um dos valores abaixo para rotacionar a imagem:\n\n1 - 90°\n2 - 180°\n3 - 270°\n\n");
 
     loop {
-        let value_rotation = require_values("Select an option: ");
+        let value_rotation = require_values("Selecione alguma das opções: ");
 
         if value_rotation < 1.0 || value_rotation > 3.0 {
             println!("Digite uma das opções acima!\n");
@@ -374,7 +374,7 @@ pub fn require_values_rotation() -> f32 {
 pub fn require_values_generation_image() -> TypeGeneration {
     loop {
         let value_temp: f32 = require_values(
-            "Escolha o tipo de imagem que deseja gerar:\n1 - Sólida\n2 - Ondas\n3 - Gradiente\n4 - Fractal\nSelect an option: ",
+            "Escolha o tipo de imagem que deseja gerar:\n1 - Sólida\n2 - Ondas\n3 - Gradiente\n4 - Fractal\nSelecione alguma das opções: ",
         );
 
         if value_temp < 1.0 || value_temp > 4.0 {

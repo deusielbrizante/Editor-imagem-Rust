@@ -14,20 +14,19 @@ use crate::{
 use image::{DynamicImage, ImageFormat};
 use std::process::exit;
 
-// TODO: Fazer com que todos os processos sejam feitas em multi-threads 
 fn main() {
     loop {
         let items: [&str; 7] = [
-            "Blur",
-            "Brighten",
-            "Crop",
-            "Rotate",
-            "Invert",
-            "Grayscale",
-            "Generate Image",
+            "Desfocar",
+            "Clarear",
+            "Recortar",
+            "Rotacionar",
+            "Inverter",
+            "Preto e Branco",
+            "Gerar Imagem",
         ];
 
-        let option_menu_selected: u8 = display_menu("Home", &items, true);
+        let option_menu_selected: u8 = display_menu("Página Inicial", &items, true);
 
         let mut infile: String = if option_menu_selected != 7 {
             get_image()

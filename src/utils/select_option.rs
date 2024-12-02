@@ -35,8 +35,15 @@ pub fn select_simple_option(
             break (not_continue, img);
         }
 
-        let items: [&str; 6] = ["Blur", "Brighten", "Crop", "Rotate", "Invert", "Grayscale"];
-        let option_menu_selected: u8 = display_menu("More Adjusts", &items, true);
+        let items: [&str; 6] = [
+            "Desfocar",
+            "Clarear",
+            "Recortar",
+            "Rotacionar",
+            "Inverter",
+            "Preto e Branco",
+        ];
+        let option_menu_selected: u8 = display_menu("Mais Ajustes", &items, true);
 
         type_execution = match option_menu_selected {
             1 => TypeExecution::Blur,
@@ -65,7 +72,7 @@ fn select_more_adjusts() -> bool {
         clear_screen();
 
         img_name.clear();
-        print!("Deseja fazer mais algum ajuste na imagem ?\n\n1 - Sim\n2 - Não\n\nSelecione uma opção: ");
+        print!("Deseja fazer mais algum ajuste na imagem ?\n\n1 - Sim\n2 - Não\n\nSelecione alguma das opções: ");
         stdout().flush().unwrap();
 
         stdin().read_line(&mut img_name).unwrap();

@@ -244,6 +244,7 @@ dependencies = [
  "log",
  "num-complex",
  "rand",
+ "rayon",
  "rpassword",
 ]
 
